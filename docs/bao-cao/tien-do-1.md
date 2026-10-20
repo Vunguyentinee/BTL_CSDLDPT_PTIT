@@ -212,6 +212,56 @@ Hai cặp thú vị nhất:
 | | ⑨ | Fourier descriptors, lấy mẫu lại 256 điểm, chuẩn hóa theo \|F(1)\| | 20 |
 | | ⑩ | Contour signature 64 mẫu | 64 |
 
+**Nguyên lý từng đặc trưng.** Ba nhóm ứng với ba kênh thị giác độc lập: hai loài có thể
+giống nhau ở một kênh mà khác hẳn ở kênh kia — cá thu và cá ngừ vằn cùng màu bạc (màu
+giống) nhưng hoa văn khác phương (kết cấu khác).
+
+*Màu — màu gì và nằm ở đâu:*
+
+- **① Color moments** (*mô men màu*) — ba con số thống kê tóm tắt phân bố màu: trung bình
+  (màu nào), độ lệch chuẩn (màu có đều không), độ xiên (lệch sáng hay tối). Tính trên hệ
+  màu **Lab** vì Lab tách độ sáng (L) khỏi màu (a: xanh↔đỏ, b: lam↔vàng), nên so màu công
+  bằng dù ảnh chụp ở điều kiện sáng khác nhau.
+- **② Histogram HSV theo dải** — *histogram* là biểu đồ đếm mỗi khoảng màu xuất hiện bao
+  nhiêu lần. Ở đây đếm riêng cho **4 khúc từ đầu đến đuôi** thay vì cho cả con cá, nên giữ
+  được thông tin **màu nằm ở đâu**. Cần thiết vì ① trộn cả con cá thành một màu trung
+  bình, khiến cá *đầu đỏ đuôi vàng* và cá *đầu vàng đuôi đỏ* cho kết quả y hệt nhau.
+- **③ Màu trội** — dùng thuật toán **k-means** gom mọi điểm ảnh thành 5 cụm màu, lấy tâm
+  mỗi cụm kèm tỉ lệ diện tích. Phải sắp xếp lại theo tỉ lệ giảm dần vì k-means trả về cụm
+  theo thứ tự ngẫu nhiên mỗi lần chạy.
+
+*Kết cấu — hoa văn bề mặt, mô tả quan hệ giữa các điểm ảnh kề nhau:*
+
+- **④ LBP** (*Local Binary Pattern*, mẫu nhị phân cục bộ) — với mỗi điểm ảnh, so nó với
+  các điểm xung quanh: sáng hơn ghi 1, tối hơn ghi 0, ghép thành một số nhị phân rồi đếm
+  tần suất. Vì chỉ so **hơn/kém** chứ không so giá trị tuyệt đối nên không bị ảnh hưởng
+  bởi điều kiện chiếu sáng. Dùng **3 bán kính** vì vảy cá nhỏ và sọc cá lớn nằm ở hai
+  thang kích thước khác nhau.
+- **⑤ GLCM** (*Gray-Level Co-occurrence Matrix*, ma trận đồng hiện mức xám) — bảng đếm số
+  **cặp điểm ảnh kề nhau** có độ sáng (i, j), từ đó rút ra 4 thuộc tính: tương phản, tương
+  quan, năng lượng, đồng nhất. **Giữ nguyên 4 hướng** 0°/45°/90°/135° thay vì lấy trung
+  bình, vì bộ dữ liệu có cá thu **vạch đứng** và cá ngừ vằn **dải ngang** — lấy trung bình
+  là tự tay xóa mất thứ phân biệt chúng.
+- **⑥ Gabor** — bộ lọc dò sóng hình sin có hướng và độ rộng định sẵn, giống như hỏi ảnh
+  *"có bao nhiêu sọc rộng 5 điểm ảnh nghiêng 30°?"*. Mô phỏng khá sát cách tế bào thị giác
+  người phản ứng với hoa văn.
+
+*Hình dáng — chỉ dùng đường viền lấy từ mask, bỏ qua hoàn toàn màu sắc:*
+
+- **⑦ Tỉ số hình học** — 7 tỉ lệ mô tả cá béo hay gầy, tròn hay dẹt: dài/cao, diện
+  tích/chu vi², độ đặc, độ lệch tâm… Đây là nhóm **dễ giải thích nhất** cho người đọc.
+- **⑧ Hu moments** (*mô men bất biến Hu*, Ming-Kuei Hu 1962) — 7 tổ hợp đại số của mô men
+  ảnh, có tính chất **không đổi khi ảnh bị dịch, xoay hoặc phóng to thu nhỏ**. Giá trị
+  chênh nhau hàng triệu lần nên phải nén log trước khi dùng.
+- **⑨ Fourier descriptors** (*mô tả tử Fourier*) — coi đường viền là chuỗi **số phức**
+  x + iy rồi biến đổi Fourier. Hệ số **thấp** cho dáng tổng thể, hệ số **cao** cho chi tiết
+  răng cưa, nên lấy 20 hệ số đầu là bỏ nhiễu mà giữ dáng. Ba phép chuẩn hóa làm nó bất
+  biến: bỏ F(0) → bất biến vị trí; chia \|F(1)\| → bất biến kích thước; lấy modulus →
+  bất biến xoay.
+- **⑩ Contour signature** (*chữ ký đường viền*) — quét đều 64 góc quanh một vòng, mỗi góc
+  ghi khoảng cách từ tâm ra viền. Biến hình dạng thành một đường cong một chiều: cá đuôi
+  dài cho đỉnh nhọn, cá tròn cho đường gần phẳng.
+
 Bốn quyết định kỹ thuật bắt buộc, đã ghi vào mã nguồn:
 
 1. **Chỉ trích trên vùng mask.** Nền xám nếu lọt vào sẽ kéo mọi ảnh về cùng một màu trung
@@ -225,8 +275,18 @@ Bốn quyết định kỹ thuật bắt buộc, đã ghi vào mã nguồn:
 
 ### 2.3 Bộ B — ResNet18
 
-Dùng mạng huấn luyện sẵn làm bộ trích đặc trưng **đông cứng**: bỏ lớp phân loại, lấy vector
-512 chiều sau global average pooling, chuẩn hóa L2, đo bằng cosine.
+**ResNet** (*Residual Network*, mạng phần dư) là một kiến trúc **mạng nơ-ron tích chập**
+(*CNN*) do Microsoft Research công bố năm 2015; số **18** là số lớp. Chữ "phần dư" chỉ các
+**đường tắt** nối thẳng qua vài lớp, giúp huấn luyện được mạng sâu mà không mất tín hiệu.
+Bản dùng ở đây đã huấn luyện sẵn trên **ImageNet** — bộ dữ liệu 1,2 triệu ảnh thuộc 1000
+loại vật thể.
+
+Nhóm dùng nó làm bộ trích đặc trưng **đông cứng**: bỏ lớp phân loại cuối, lấy vector 512
+chiều sau **global average pooling**, chuẩn hóa L2, đo bằng cosine.
+
+Lớp phân loại cuối trả lời "đây là con chó hay cái ô tô" — vô dụng với cá. Nhưng các lớp
+**trước** nó đã học được cạnh, góc, hoa văn, bố cục, những thứ dùng chung cho mọi loại
+ảnh; 512 số ngay trước lớp cuối chính là phần hữu ích đó.
 
 Không tinh chỉnh, vì hai lý do: 1.085 ảnh chia 20 loài là quá ít để huấn luyện mà không
 học thuộc lòng; và nếu tinh chỉnh thì **mỗi fold phải huấn luyện lại một mô hình riêng**
@@ -510,7 +570,7 @@ Hai câu hỏi nhóm sẽ trả lời bằng số đo ở mốc 2:
 
 ---
 
-## Phụ lục — tái lập kết quả
+## Phụ lục A — tái lập kết quả
 
 ```bash
 python -m pip install -r requirements.txt
@@ -534,3 +594,59 @@ python -c "import pypandoc; pypandoc.convert_file('docs/bao-cao/tien-do-1.md','d
 
 **Tài liệu kèm theo:** `docs/kien-truc-va-mo-hinh-du-lieu.md` · `docs/bo-c-ngu-nghia.md` ·
 `docs/intent/fish-image-retrieval.md` · `tasks/plan.md`
+
+---
+
+## Phụ lục B — Thuật ngữ
+
+**Không gian màu**
+
+| Tên | Viết tắt của | Là gì |
+|---|---|---|
+| RGB | Red, Green, Blue | Cách máy lưu ảnh: 3 kênh đỏ, lục, lam |
+| Lab | CIELAB | L = độ sáng, a = xanh↔đỏ, b = lam↔vàng. Tách độ sáng khỏi màu |
+| HSV | Hue, Saturation, Value | H = sắc màu, S = độ đậm, V = độ sáng. Gần cách người mô tả màu |
+
+**Xử lý ảnh**
+
+| Tên | Là gì |
+|---|---|
+| mask | Ảnh đen trắng đánh dấu điểm nào là cá, điểm nào là nền |
+| kênh alpha | Kênh thứ 4 của ảnh RGBA, vốn dùng cho độ trong suốt; ở đây mượn để lưu mask |
+| rembg / u2net | Thư viện và mô hình dùng để tách nền, sinh ra mask |
+| phép affine | Gộp xoay + thu nhỏ + dịch chuyển + lật thành một bước duy nhất |
+| contour | Đường viền ngoài của vật thể |
+
+**Học máy**
+
+| Tên | Viết tắt của | Là gì |
+|---|---|---|
+| CNN | Convolutional Neural Network | Mạng nơ-ron tích chập, kiến trúc chuyên xử lý ảnh |
+| ResNet | Residual Network | Một kiến trúc CNN; số 18 là số lớp |
+| ImageNet | — | Bộ dữ liệu 1,2 triệu ảnh / 1000 loại vật thể, chuẩn để huấn luyện sẵn |
+| GAP | Global Average Pooling | Lấy trung bình toàn bản đồ đặc trưng → dãy số cố định |
+| k-means | — | Thuật toán gom dữ liệu thành k cụm, mỗi cụm có một tâm |
+| PCA | Principal Component Analysis | Giảm số chiều, giữ lại các hướng biến thiên mạnh nhất |
+
+**Chuẩn hóa và khoảng cách**
+
+| Tên | Là gì |
+|---|---|
+| z-score | Trừ trung bình rồi chia độ lệch chuẩn → mọi chiều về cùng thang đo |
+| chuẩn hóa L2 | Chia vector cho độ dài của nó → mọi vector dài bằng 1, chỉ còn khác hướng |
+| khoảng cách L2 | Khoảng cách Euclid, đường chim bay giữa hai điểm |
+| cosine | Đo góc giữa hai vector, bỏ qua độ dài |
+| Chi-square | Độ đo chuyên dùng để so hai histogram |
+| one-hot | Mã hóa giá trị phân loại: mỗi giá trị một ô, đúng ghi 1, còn lại 0 |
+
+**Đánh giá và truy hồi**
+
+| Tên | Là gì |
+|---|---|
+| gallery | Kho ảnh để tìm trong đó |
+| query | Ảnh truy vấn, ảnh người dùng đưa vào |
+| fold | Một phần trong phép chia 5 phần; mỗi lượt một phần làm query, 4 phần làm gallery |
+| P@k | Trong k ảnh trả về, bao nhiêu phần đúng loài |
+| mAP | *mean Average Precision* — điểm tổng hợp, thưởng cho việc đẩy ảnh đúng lên hạng cao |
+| HNSW | *Hierarchical Navigable Small World* — chỉ mục giúp tìm k láng giềng gần nhanh hơn quét tuần tự |
+| CBIR | *Content-Based Image Retrieval* — truy hồi ảnh dựa trên nội dung, chính là bài toán của đồ án |
