@@ -40,7 +40,7 @@
 - [x] **T9** Bộ C: 20 loài × 10 thuộc tính ngữ nghĩa → `data_meta/thuoc_tinh_ngu_nghia.csv`,
       `scripts/bo_c.py`, `docs/bo-c-ngu-nghia.md` · đo xong giá trị thông tin
   - [ ] cả nhóm duyệt chéo lại 200 ô giá trị (NT đã soạn bản đầu từ FishBase)
-  - [ ] **xác nhận AST_OCE**: ảnh Archive là *Astronotus ocellatus* hay cá lai *Amphilophus*?
+  - [x] **xác nhận AST_OCE** 20/10: đúng *Astronotus ocellatus*; tên Việt sai → sửa thành *Cá hoàng bảo yến*
 - [ ] **T10** Chuẩn hóa khối + độ đo theo loại + hợp nhất có trọng số · M · NT
 
 ### ✅ Chốt chặn 2 — ablation chạy được

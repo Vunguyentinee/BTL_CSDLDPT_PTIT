@@ -52,7 +52,7 @@ và `rat_lon` cách nhau đúng bằng `rat_nho` và `nho`, mà thực tế khô
 
 | Thuộc tính | Giá trị dùng | Entropy (bit) | Cặp tách được | Tỉ lệ |
 |---|---|---|---|---|
-| `mau_nen` | 8/9 | **2,63** | 161/190 | **85%** |
+| `mau_nen` | 8/9 | **2,65** | 162/190 | **85%** |
 | `dang_duoi` | 5/5 | 2,18 | 152/190 | 80% |
 | `kich_thuoc` | 5/5 | 2,06 | 147/190 | 77% |
 | `ti_le_dai_cao` | 5/5 | 2,06 | 143/190 | 75% |
@@ -86,9 +86,9 @@ Cặp cùng họ là cặp dễ nhầm nhất. Bảng dưới đếm **số thu�
 | CICH | ORE_MOS | ORE_NIL | 4 | `mau_nen`, `soc`, `tuong_phan_lung_bung`, `moi_truong` |
 | OSPH | BET_SPL | OSP_GOR | 4 | `dang_than`, `mau_nen`, `dang_duoi`, `kich_thuoc` |
 | CICH | AST_OCE | ORE_MOS | 5 | `mau_nen`, `cham`, `dang_duoi`, `vay_lung`, `moi_truong` |
+| CICH | AST_OCE | SYM_SPP | 5 | `dang_than`, `ti_le_dai_cao`, `soc`, `cham`, `kich_thuoc` |
 | SALM | ONC_MYK | SAL_SAL | 5 | `soc`, `cham`, `dang_duoi`, `kich_thuoc`, `moi_truong` |
 | CICH | AST_OCE | ORE_NIL | 6 | 6 thuộc tính |
-| CICH | AST_OCE | SYM_SPP | 6 | 6 thuộc tính |
 | CYPR | CAR_AUR | CYP_CAR | 7 | 7 thuộc tính |
 | CICH | ORE_NIL | SYM_SPP | 7 | 7 thuộc tính |
 | CICH | ORE_MOS | SYM_SPP | 8 | 8 thuộc tính |
@@ -117,6 +117,29 @@ từ điểm ảnh). Ba bộ bù nhau, không thay nhau.
 | SYM_SPP là **nhãn cấp chi**, không phải cấp loài | Thuộc tính của `Symphysodon spp` là trung bình của nhiều dạng lai |
 | BET_SPL, POE_RET, CAR_AUR **biến dị màu/đuôi rất lớn** | Giá trị `da_mau` và `xoe_dai` chỉ đúng với phần lớn ảnh, không phải mọi ảnh |
 | `ti_le_dai_cao` của BET_SPL tính **theo mask** (gộp vây) | Không so sánh trực tiếp được với số đo thân cá trong tài liệu sinh học |
-| AST_OCE: tên Việt "cá hồng két" **có thể không trùng loài** | Cần duyệt mắt ảnh Archive để xác nhận là *Astronotus ocellatus* chứ không phải cá lai *Amphilophus* |
+| AST_OCE có nhiều dòng màu nhân tạo | Chỉ ~1/3 ảnh là dạng hoang dã nâu sẫm, còn lại bạch tạng và đỏ-cam → `mau_nen=da_mau`; đốm mắt gần như mất ở dòng bạch tạng |
 
-Hạng mục cuối là việc **cần làm trước khi báo cáo tổng** — xem `tasks/todo.md`.
+## 6. Một lỗi nhãn đã phát hiện và sửa (20/10)
+
+Dòng `AST_OCE` ban đầu ghi `ten_viet = "Cá hồng két"` cạnh `ten_khoa_hoc = Astronotus ocellatus`.
+Đó là **hai con cá khác nhau**:
+
+- *Astronotus ocellatus* — cá Oscar, ở Việt Nam gọi **cá hoàng bảo yến** (hoặc cá heo lửa). Dài tới
+  45cm, thân bầu dục thon, vây lưng dài liền, đốm đen viền cam ở gốc đuôi.
+- **Cá hồng két** — cá lai *blood parrot*, thân tròn như quả bóng, trán dốc, miệng hình mỏ không khép
+  kín. Là con lai nhân tạo nên **không có tên khoa học hợp lệ**.
+
+Cách phân xử: dựng **contact sheet 24/96 ảnh** của `work/chuan/AST_OCE/` và xem tận mắt. Kết quả là
+ảnh đúng *Astronotus ocellatus*, nên **tên khoa học đúng, tên tiếng Việt sai**. Đã sửa `ten_viet`
+thành *Cá hoàng bảo yến*; `ma_loai`, `ten_khoa_hoc`, `ma_ho` giữ nguyên.
+
+Cùng lúc phát hiện `mau_nen` ghi `nau` theo mô tả sách giáo khoa là không khớp ảnh thật trong CSDL —
+đã đổi sang `da_mau`.
+
+> **Bài học ghi vào phần quy trình của báo cáo:** đây là lần thứ hai trong dự án mà việc mở ảnh ra xem
+> sửa được một kết luận rút ra từ tên thư mục (lần đầu là sự cố crawl Bing trả về ảnh rác). Dự đoán ban
+> đầu còn sai cả chiều — ngờ ảnh sai, hóa ra nhãn sai.
+
+---
+
+Các hạn chế ở mục 5 là việc **cần xử lý trước khi báo cáo tổng** — xem `tasks/todo.md`.

@@ -17,5 +17,5 @@ CHA_STR,tru_dai,rat_dai,nau,dai_ngang,khong,vua,tron,dai_lien,lon,nuoc_ngot,"Th�
 ANA_TES,det_dai,trung_binh,nau,khong,khong,yeu,tron,gai_cung,nho,nuoc_ngot,
 BET_SPL,det_dai,cao,da_mau,khong,khong,yeu,xoe_dai,dai_lien,rat_nho,nuoc_ngot,"Vây xòe rất dài nên mask gộp cả vây, ti_le_dai_cao tính theo mask chứ không theo thân. Biến dị màu cực lớn nên mau_nen=da_mau."
 SYM_SPP,det_tron,rat_cao,da_mau,vach_dung,khong,yeu,tron,dai_lien,nho,nuoc_ngot,"NHÃN CẤP CHI. 9 vạch đứng ở dạng hoang dã nhưng các dòng lai mất gần hết hoa văn."
-AST_OCE,det_cao,cao,nau,khong,dom_mat,yeu,tron,dai_lien,trung_binh,nuoc_ngot,"Đốm mắt ở gốc vây đuôi là nguồn gốc tên loài ocellatus. CẦN DUYỆT ẢNH: tên Việt ""cá hồng két"" thường chỉ cá lai Amphilophus màu cam, không phải Astronotus ocellatus — phải xác nhận ảnh Archive đúng loài nào."
+AST_OCE,det_cao,cao,da_mau,khong,dom_mat,yeu,tron,dai_lien,trung_binh,nuoc_ngot,"Đốm mắt ở gốc vây đuôi là nguồn gốc tên loài ocellatus, nhưng ở các dòng bạch tạng thì rất mờ. ĐÃ DUYỆT 20/10 trên contact sheet 24/96 ảnh: đúng Astronotus ocellatus. mau_nen để da_mau chứ không phải nau vì chỉ ~1/3 ảnh là dạng hoang dã nâu sẫm, còn lại là dòng bạch tạng trắng-hồng và dòng đỏ-cam."
 POE_RET,det_dai,trung_binh,da_mau,van_luoi,day,yeu,xoe_dai,ngan,rat_nho,nuoc_ngot,"Vân mắt lưới là nguồn gốc tên loài reticulata. Biến dị màu và dáng đuôi cực lớn."

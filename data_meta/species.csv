@@ -28,5 +28,5 @@ TRI_TRI,Trichopodus trichopterus,Trichopodus,OSPH,Osphronemidae,Cá sặc bướ
 BAR_GON,Barbonymus gonionotus,Barbonymus,CYPR,Cyprinidae,Cá mè vinh,Silver barb,,,187125,407,260,,,,ung_vien,,Dự phòng cho họ Cyprinidae
 BET_SPL,Betta splendens,Betta,OSPH,Osphronemidae,Cá xiêm,Siamese fighting fish,,,,,,cap_de_nham,OSP_GOR,TV-B,da_chot,,"Nguồn: Archive. Vây xòe rất dài, biến dị màu lớn."
 SYM_SPP,Symphysodon spp,Symphysodon,CICH,Cichlidae,Cá dĩa,Discus,,,,,,cap_de_nham,AST_OCE,TV-A,da_chot,,Nguồn: Archive. NHÃN CẤP CHI chứ không phải cấp loài — ghi rõ trong phần hạn chế.
-AST_OCE,Astronotus ocellatus,Astronotus,CICH,Cichlidae,Cá hồng két,Oscar,,,,,,cap_de_nham,SYM_SPP,TV-A,da_chot,,Nguồn: Archive. Cùng họ và cùng dáng dẹt cao với cá dĩa.
+AST_OCE,Astronotus ocellatus,Astronotus,CICH,Cichlidae,Cá hoàng bảo yến,Oscar,,,,,,cap_de_nham,SYM_SPP,TV-A,da_chot,,Nguồn: Archive. Cùng họ và cùng dáng dẹt cao với cá dĩa. SỬA 20/10: tên Việt cũ ghi nhầm là cá hồng két — đó là cá lai blood parrot, không phải loài này. Contact sheet 24/96 ảnh xác nhận đúng Astronotus ocellatus (vây lưng dài liền, mõm nhọn, đuôi tròn). Còn gọi cá heo lửa, cá Oscar.
 POE_RET,Poecilia reticulata,Poecilia,POEC,Poeciliidae,Cá bảy màu,Guppy,,,,,,doi_chung,,NT,da_chot,,"Nguồn: Archive. Cá rất nhỏ, biến dị màu và dáng đuôi cực lớn."
