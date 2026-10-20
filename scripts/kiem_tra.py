@@ -45,7 +45,7 @@ def main() -> int:
                     help="chạy thêm test đối chiếu dữ liệu thật trên đĩa")
     a = ap.parse_args()
 
-    from fishcbir import cauhinh, chia_fold, danhgia, danhmuc, timkiem
+    from fishcbir import cauhinh, chia_fold, danhgia, danhmuc, fisher, timkiem
     from fishcbir.dactrung import mau, sau
 
     bo = [
@@ -56,6 +56,7 @@ def main() -> int:
         ("dactrung.sau", sau._selftest),
         ("timkiem", timkiem._selftest),
         ("danhgia", danhgia._selftest),
+        ("fisher", fisher._selftest),
     ]
     if a.day_du:
         bo += [

@@ -308,9 +308,13 @@ một cách đo được, thay vì xếp loại theo cảm tính:
 - **Đặc trưng tìm khác biệt** — phương sai **liên lớp** cao: các loài khác nhau cho giá trị
   tách xa nhau.
 
-Một đặc trưng tốt cần **cả hai**, và tỉ số giữa chúng chính là Fisher score. Nhóm sẽ trình
-bày bảng **ba cột** (phương sai nội lớp / liên lớp / tỉ số) ở báo cáo tiến độ 2, tính trên
-**mẫu cân bằng** (rút ngẫu nhiên 19 ảnh mỗi loài) để kết quả không lệch về lớp lớn.
+Một đặc trưng tốt cần **cả hai**, và tỉ số giữa chúng chính là **Fisher score**:
+
+$$F = rac{	ext{phương sai liên lớp}}{	ext{phương sai nội lớp}}$$
+
+Bảng ba cột cho Bộ A và Bộ B nằm ở mục 2.5. Mọi phép tính chạy trên **mẫu cân bằng** —
+rút ngẫu nhiên **19 ảnh mỗi loài** (bằng cỡ lớp nhỏ nhất), tổng 380 ảnh — để phương sai
+liên lớp không phản ánh kích thước lớp thay vì khác biệt loài.
 
 Phân loại sơ bộ theo thiết kế:
 
@@ -352,9 +356,93 @@ Ba kết luận:
    chỉ khác 1 thuộc tính vì từ vựng không mã hóa được *số lượng* khoang trắng. Chính khoảng
    trống này là lý do tồn tại của Bộ A và Bộ B.
 
-#### Phương pháp 2: đo trực tiếp bằng Precision@5
+#### Phương pháp 2: Fisher score trên Bộ A và Bộ B
 
-Xem mục 3. Hai phương pháp cho **cùng một kết luận**, đây là điểm nhóm muốn nhấn mạnh.
+Mẫu cân bằng 380 ảnh = 20 loài × 19 ảnh. Dùng thêm **η²** — tỉ lệ phương sai do loài giải
+thích, nằm trong [0; 1] — vì nó dễ đọc hơn tỉ số Fisher thô và **bất biến với thang đo**,
+nên so sánh được giữa các khối có đơn vị khác nhau.
+
+| Khối | Chiều | η² trung bình | **η² top-9** | η² cao nhất | Fisher cao nhất | Chiều mạnh |
+|---|---|---|---|---|---|---|
+| Bộ A① màu | 9 | 0,398 | 0,398 | 0,699 | 2,3 | 3/9 |
+| Bộ B ResNet18 | 512 | 0,366 | **0,681** | 0,779 | 3,5 | 82/512 |
+| Bộ C ngữ nghĩa | 35 | 0,971 | 1,000 | 1,000 | — | 0/35 |
+
+> **Bộ C đạt η² = 0,97 không phải vì nó mạnh.** Nó gán theo **loài**, nên mọi ảnh cùng
+> loài có vector y hệt nhau → phương sai nội lớp bằng 0 theo định nghĩa. Đây là hệ quả của
+> cách gán, không phải thành tích, và cũng chính là lý do Bộ C không dùng để truy vấn được.
+
+> **Phát hiện về phương pháp đo.** Cột "η² trung bình" nói Bộ A① (0,398) nhỉnh hơn Bộ B
+> (0,366) — trái ngược hẳn với P@5 thật (32,2% so với 72,2%). Nguyên nhân là **loãng
+> chiều**: Bộ B có 512 chiều, phần lớn không liên quan tới một cặp loài cụ thể, nên trung
+> bình bị kéo xuống; Bộ A① chỉ có 9 chiều và cả 9 đều nói về màu. So công bằng phải lấy
+> **cùng một số chiều ở cả hai bên** — cột η² top-9 cho 0,398 so với 0,681, khớp với P@5.
+> Đây là một bài học về cách đo, nhóm ghi lại vì nó suýt dẫn tới kết luận ngược.
+
+**Bảng ba cột đầy đủ — Bộ A① color moments, cả 9 chiều:**
+
+| Chiều | Phương sai **nội lớp** | Phương sai **liên lớp** | Tỉ số Fisher | η² |
+|---|---|---|---|---|
+| `lech_b` | 25,33 | 58,76 | **2,32** | 0,699 |
+| `lech_a` | 18,62 | 37,01 | **1,99** | 0,665 |
+| `tb_b` | 213,05 | 288,89 | **1,36** | 0,576 |
+| `xien_b` | 124,93 | 81,89 | 0,66 | 0,396 |
+| `tb_a` | 129,44 | 72,74 | 0,56 | 0,360 |
+| `tb_L` | 154,52 | 52,25 | 0,34 | 0,253 |
+| `lech_L` | 25,68 | 8,49 | 0,33 | 0,248 |
+| `xien_L` | 176,40 | 44,22 | 0,25 | 0,200 |
+| `xien_a` | 80,74 | 18,70 | 0,23 | 0,188 |
+
+Hai kết luận rút ra từ bảng này:
+
+1. **Ba chiều của kênh độ sáng L xếp gần cuối bảng** (0,34 · 0,33 · 0,25). Hợp lý: ảnh cá
+   chụp ở điều kiện chiếu sáng rất khác nhau nên L có phương sai **nội lớp** cao — nó biến
+   động trong cùng một loài nhiều hơn là giữa các loài. Đây là bằng chứng định lượng cho
+   quyết định chọn hệ màu **Lab** (tách L ra) thay vì RGB, nơi độ sáng trộn vào cả ba kênh.
+2. **Độ lệch chuẩn của màu mạnh hơn màu trung bình.** `lech_b` (2,32) và `lech_a` (1,99)
+   đứng đầu, trên cả `tb_b` (1,36) và `tb_a` (0,56). Nghĩa là *"màu có đồng đều không"*
+   phân biệt loài tốt hơn *"màu gì"* — cá hoa văn sặc sỡ và cá một màu tách nhau rõ hơn là
+   cá cam tách khỏi cá đỏ.
+
+**Bộ B ResNet18 — phân bố trên 512 chiều:**
+
+| Phân vị tỉ số Fisher | 25% | 50% | 75% | 95% |
+|---|---|---|---|---|
+| Giá trị | 0,38 | 0,55 | 0,82 | 1,40 |
+
+- **82/512 chiều** có tỉ số Fisher ≥ 1 (liên lớp vượt nội lớp)
+- **0/512 chiều vô dụng** (không chiều nào có tỉ số < 0,1)
+- Chiều mạnh nhất là `d324` với tỉ số 3,52 (η² = 0,779)
+
+Không có chiều chết nghĩa là **PCA xuống 128 chiều sẽ mất thông tin thật**, không phải chỉ
+cắt phần thừa. Nhóm sẽ đo đánh đổi này ở T13 thay vì giả định.
+
+**Theo từng cặp loài cùng họ** (η² top-9, cao hơn là tách tốt hơn):
+
+| Cặp | Bộ A① | Bộ B | Chênh |
+|---|---|---|---|
+| AMP_FRE / AMP_OCE | 0,103 | **0,665** | +0,561 |
+| AST_OCE / SYM_SPP | 0,046 | **0,524** | +0,479 |
+| ORE_NIL / SYM_SPP | 0,231 | **0,691** | +0,460 |
+| BET_SPL / OSP_GOR | 0,218 | **0,671** | +0,453 |
+| SCO_COM / KAT_PEL | 0,087 | **0,510** | +0,423 |
+| ORE_MOS / SYM_SPP | 0,295 | **0,701** | +0,406 |
+| CAR_AUR / CYP_CAR | 0,197 | **0,567** | +0,370 |
+| AST_OCE / ORE_NIL | 0,243 | **0,561** | +0,318 |
+| PAR_HEP / ZEB_FLA | 0,489 | **0,762** | +0,273 |
+| ONC_MYK / SAL_SAL | 0,115 | **0,386** | +0,271 |
+| AST_OCE / ORE_MOS | 0,281 | **0,522** | +0,241 |
+| **ORE_MOS / ORE_NIL** | **0,069** | **0,182** | +0,112 |
+
+**Bộ B thắng cả 12 cặp**, nhất quán với P@5. Dòng cuối là kết quả quan trọng nhất: cặp hai
+loài rô phi *Oreochromis* cùng chi có η² thấp nhất ở **cả hai** khối — 0,069 và 0,182,
+kém xa cặp đứng kề. Đây chính là cặp mà ma trận nhầm lẫn ở mục 3.5 chỉ ra, và cả màu lẫn
+đặc trưng sâu đều chưa giải quyết được. Nó là mục tiêu cụ thể cho ⑤ GLCM và ⑥ Gabor.
+
+#### Phương pháp 3: đo trực tiếp bằng Precision@5
+
+Xem mục 3. Ba phương pháp — entropy trên bảng người gán, Fisher trên đặc trưng số, và P@5
+trên truy vấn thật — cho **cùng một kết luận**, đây là điểm nhóm muốn nhấn mạnh.
 
 ---
 
