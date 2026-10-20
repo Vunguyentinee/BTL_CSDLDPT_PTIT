@@ -99,7 +99,7 @@
 
 - [x] **T19** Báo cáo tiến độ 1 → `docs/bao-cao/tien-do-1.md` (viết 20/10, hạn 22/10)
   - [ ] nhóm đọc rà lại trước khi nộp
-  - [ ] xuất bản nộp (.docx hoặc PDF) nếu thầy yêu cầu định dạng file
+  - [x] xuất `.docx` → `docs/bao-cao/Bao-cao-tien-do-1.docx` (có mục lục, 22 bảng)
 - [ ] **T20** Báo cáo tiến độ 2 — hạn 26/11 · M
 - [ ] **T21** Báo cáo tổng + demo — hạn 15/12 · L
   - đưa mục kiến trúc & mô hình dữ liệu vào báo cáo, nguồn: `docs/kien-truc-va-mo-hinh-du-lieu.md`

@@ -519,6 +519,13 @@ python scripts/bo_c.py --kiem-tra       # bảng entropy Bộ C
 python scripts/danh_gia.py              # mọi bảng số ở mục 3
 ```
 
+Xuất bản nộp định dạng Word:
+
+```bash
+python -m pip install pypandoc_binary       # pandoc kèm sẵn, không cần cài riêng
+python -c "import pypandoc; pypandoc.convert_file('docs/bao-cao/tien-do-1.md','docx',  outputfile='docs/bao-cao/Bao-cao-tien-do-1.docx',format='gfm',  extra_args=['--toc','--toc-depth=2','--standalone','--metadata','lang=vi-VN'])"
+```
+
 | Tạo ra | Nội dung |
 |---|---|
 | `data_meta/splits/folds.csv` | Phép chia 5-fold, 1.085 dòng |
