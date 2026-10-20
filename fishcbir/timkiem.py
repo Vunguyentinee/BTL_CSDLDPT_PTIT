@@ -45,6 +45,21 @@ def khoang_cach_l2(truy_van: np.ndarray, gallery: np.ndarray) -> np.ndarray:
     return np.sqrt(d2)
 
 
+def khoang_cach_cosine(truy_van: np.ndarray, gallery: np.ndarray) -> np.ndarray:
+    """Khoảng cách cosine 1 - cos(q, g), nằm trong [0, 2].
+
+    Dùng cho đặc trưng sâu: độ DÀI vector ResNet phản ánh độ mạnh kích hoạt
+    (ảnh tương phản cao cho vector dài hơn) chứ không phản ánh loài, nên chỉ
+    so hướng. Tự chuẩn hóa lại ở đây để hàm vẫn đúng kể cả khi đầu vào chưa
+    được chuẩn hóa sẵn.
+    """
+    def _ch(X):
+        n = np.linalg.norm(X, axis=1, keepdims=True)
+        return X / np.where(n < 1e-12, 1.0, n)
+
+    return 1.0 - _ch(truy_van) @ _ch(gallery).T
+
+
 def xep_hang(d: np.ndarray, k: int) -> np.ndarray:
     """Chỉ số của k gallery gần nhất cho mỗi truy vấn, đã sắp từ gần đến xa.
 
@@ -135,6 +150,19 @@ def _selftest() -> None:
     # Điểm trùng nhau phải cho khoảng cách đúng 0, không phải số âm nhỏ rồi NaN.
     lon = np.full((1, 50), 1e3)
     assert khoang_cach_l2(lon, lon)[0, 0] == 0.0
+
+    # --- khoảng cách cosine ---
+    # Vector cùng hướng khác độ dài → khoảng cách 0. Đây là điểm khác L2.
+    u = np.array([[1.0, 0.0], [0.0, 2.0]])
+    v = np.array([[5.0, 0.0], [0.0, 1.0], [-1.0, 0.0]])
+    c = khoang_cach_cosine(u, v)
+    assert c.shape == (2, 3)
+    assert abs(c[0, 0]) < 1e-12, "cùng hướng khác độ dài phải cho khoảng cách 0"
+    assert abs(c[0, 1] - 1.0) < 1e-12, "vuông góc phải cho 1"
+    assert abs(c[0, 2] - 2.0) < 1e-12, "ngược hướng phải cho 2"
+    assert abs(c[1, 1]) < 1e-12
+    # Vector 0 không được sinh NaN.
+    assert np.all(np.isfinite(khoang_cach_cosine(np.zeros((1, 2)), v)))
 
     # --- xếp hạng ---
     d = np.array([[5.0, 1.0, 3.0, 2.0], [0.5, 9.0, 0.1, 7.0]])

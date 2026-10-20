@@ -45,20 +45,23 @@ def main() -> int:
                     help="chạy thêm test đối chiếu dữ liệu thật trên đĩa")
     a = ap.parse_args()
 
-    from fishcbir import cauhinh, chia_fold, danhmuc, timkiem
-    from fishcbir.dactrung import mau
+    from fishcbir import cauhinh, chia_fold, danhgia, danhmuc, timkiem
+    from fishcbir.dactrung import mau, sau
 
     bo = [
         ("cauhinh", cauhinh._selftest),
         ("danhmuc", danhmuc._selftest),
         ("chia_fold", chia_fold._selftest),
         ("dactrung.mau", mau._selftest),
+        ("dactrung.sau", sau._selftest),
         ("timkiem", timkiem._selftest),
+        ("danhgia", danhgia._selftest),
     ]
     if a.day_du:
         bo += [
             ("danhmuc [dữ liệu thật]", danhmuc._selftest_du_lieu_that),
             ("chia_fold [dữ liệu thật]", chia_fold._selftest_du_lieu_that),
+            ("dactrung.sau [tải mô hình]", sau._selftest_mo_hinh),
         ]
 
     print(f"Chạy {len(bo)} bộ self-test\n")

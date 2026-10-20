@@ -16,3 +16,9 @@ onnxruntime>=1.17
 
 # tkinter (review_tool.py) đi kèm sẵn bản cài Python chính thức trên Windows,
 # không cài qua pip được.
+
+# --- Chỉ cần cho Bộ B (đặc trưng sâu), fishcbir/dactrung/sau.py ---
+# Bản CPU là đủ. Lần chạy đầu tự tải ResNet18 ~45MB về ~/.cache/torch/
+#   python -m pip install torch torchvision --index-url https://download.pytorch.org/whl/cpu
+torch>=2.10
+torchvision>=0.25

@@ -1,12 +1,11 @@
-"""Chạy toàn tuyến: chia fold → trích đặc trưng → tìm kiếm → đo chỉ số.
+"""Chạy toàn tuyến và so sánh các khối đặc trưng.
 
-Đây là lát cắt dọc đầu tiên của hệ (việc T2, T3, T4 trong tasks/plan.md). Mục
-tiêu không phải điểm số cao mà là **toàn tuyến thông**: nếu 9 chiều color
-moments đã cho P@5 cao hơn hẳn mức ngẫu nhiên thì phần còn lại của Bộ A chỉ
-là lặp lại cùng một khuôn.
+    python scripts/danh_gia.py                 # cả Bộ A① và Bộ B
+    python scripts/danh_gia.py --bo mau        # chỉ color moments
+    python scripts/danh_gia.py --trich-lai     # bỏ cache, trích lại từ ảnh
 
-    python scripts/danh_gia.py              # chạy đủ, dùng lại đặc trưng đã trích
-    python scripts/danh_gia.py --trich-lai  # bỏ cache, trích lại từ ảnh
+Khối "mau"  = Bộ A đặc trưng ① color moments Lab, 9 chiều, L2 sau z-score.
+Khối "sau"  = Bộ B ResNet18 512 chiều, cosine, không z-score (đã chuẩn hóa L2).
 """
 
 from __future__ import annotations
@@ -28,156 +27,147 @@ for _s in (sys.stdout, sys.stderr):
     except (AttributeError, OSError):
         pass
 
-from fishcbir import cauhinh, chia_fold, danhmuc, timkiem  # noqa: E402
-from fishcbir.dactrung import mau  # noqa: E402
+from fishcbir import cauhinh, chia_fold, danhgia, danhmuc  # noqa: E402
+from fishcbir.dactrung import mau, sau  # noqa: E402
 
-CACHE = cauhinh.KET_QUA / "dactrung_mau.npz"
+# Mỗi khối: (nhãn in ra, module, độ đo, có z-score không)
+KHOI = {
+    "mau": ("Bộ A① color moments Lab 9 chiều", mau, "l2", True),
+    "sau": ("Bộ B ResNet18 512 chiều", sau, "cosine", False),
+}
 
 
-def trich_tat_ca(anh: list[danhmuc.Anh], trich_lai: bool) -> np.ndarray:
-    """Ma trận đặc trưng (n_anh, 9), hàng thứ i ứng với anh[i]."""
+def cache_cua(ten: str) -> Path:
+    return cauhinh.KET_QUA / f"dactrung_{ten}.npz"
+
+
+def trich_tat_ca(ten: str, anh: list[danhmuc.Anh], trich_lai: bool) -> np.ndarray:
     ids = [a.image_id for a in anh]
-    if CACHE.exists() and not trich_lai:
-        d = np.load(CACHE, allow_pickle=False)
+    c = cache_cua(ten)
+    if c.exists() and not trich_lai:
+        d = np.load(c, allow_pickle=False)
         if list(d["image_id"]) == ids:
-            print(f"Dùng lại đặc trưng đã trích: {CACHE.relative_to(ROOT)}")
+            print(f"  dùng lại {c.relative_to(ROOT)}")
             return d["X"]
-        print("Cache không khớp danh sách ảnh hiện tại — trích lại.")
+        print("  cache không khớp danh sách ảnh — trích lại")
 
-    print(f"Trích color moments cho {len(anh)} ảnh...")
+    mo_dun = KHOI[ten][1]
+    print(f"  trích {len(anh)} ảnh...")
     t0 = time.time()
-    X = np.empty((len(anh), mau.SO_CHIEU), np.float64)
-    for i, a in enumerate(anh):
-        rgb, mask = danhmuc.nap_anh(a.duong_dan)
-        X[i] = mau.trich(rgb, mask)
-        if (i + 1) % 200 == 0:
-            print(f"  {i + 1}/{len(anh)}")
+    if ten == "sau":
+        # Trích theo lô để tận dụng phép nhân ma trận; nạp ảnh theo từng khúc
+        # để không giữ cả 1.085 ảnh 384x384 trong RAM cùng lúc.
+        X = np.empty((len(anh), mo_dun.SO_CHIEU), np.float32)
+        KHUC = 64
+        for i in range(0, len(anh), KHUC):
+            lo = [danhmuc.nap_anh(a.duong_dan)[0] for a in anh[i:i + KHUC]]
+            X[i:i + len(lo)] = mo_dun.trich_lo(lo)
+            print(f"    {min(i + KHUC, len(anh))}/{len(anh)}")
+    else:
+        X = np.empty((len(anh), mo_dun.SO_CHIEU), np.float64)
+        for i, a in enumerate(anh):
+            rgb, mask = danhmuc.nap_anh(a.duong_dan)
+            X[i] = mo_dun.trich(rgb, mask)
+            if (i + 1) % 400 == 0:
+                print(f"    {i + 1}/{len(anh)}")
     giay = time.time() - t0
-    print(f"  xong trong {giay:.1f}s ({giay / len(anh) * 1000:.1f} ms/ảnh)")
+    print(f"  xong {giay:.1f}s ({giay / len(anh) * 1000:.1f} ms/ảnh)")
 
     if not np.all(np.isfinite(X)):
-        raise SystemExit("LỖI: đặc trưng có NaN hoặc vô cực")
-    CACHE.parent.mkdir(parents=True, exist_ok=True)
-    np.savez_compressed(CACHE, X=X, image_id=np.array(ids))
+        raise SystemExit(f"LỖI: đặc trưng {ten} có NaN hoặc vô cực")
+    c.parent.mkdir(parents=True, exist_ok=True)
+    np.savez_compressed(c, X=X, image_id=np.array(ids))
     return X
 
 
-def muc_ngau_nhien(nhan: np.ndarray, fold: np.ndarray, k: int) -> float:
-    """P@k kỳ vọng nếu xếp hạng hoàn toàn ngẫu nhiên, trung bình macro.
-
-    Mốc so sánh bắt buộc. Lớp mất cân bằng nên con số này KHÔNG phải 1/20;
-    phải tính thật từ tỉ lệ từng loài trong gallery của từng fold.
-    """
-    ra = []
-    for m in np.unique(nhan):
-        theo_fold = []
-        for f in np.unique(fold):
-            gal = fold != f
-            if not (fold == f).any():
-                continue
-            theo_fold.append((nhan[gal] == m).sum() / gal.sum())
-        ra.append(float(np.mean(theo_fold)))
-    return float(np.mean(ra))
-
-
 def main() -> int:
-    ap = argparse.ArgumentParser(description="Đánh giá 5-fold cho đặc trưng color moments")
-    ap.add_argument("--trich-lai", action="store_true", help="bỏ cache, trích lại từ ảnh")
+    ap = argparse.ArgumentParser(description="Đánh giá 5-fold các khối đặc trưng")
+    ap.add_argument("--bo", nargs="*", choices=list(KHOI), default=list(KHOI))
+    ap.add_argument("--trich-lai", action="store_true")
     a = ap.parse_args()
 
-    # --- T2: chia fold ---
     anh = danhmuc.liet_ke_anh()
-    print(f"{len(anh)} ảnh / {len(set(x.ma_loai for x in anh))} loài")
     f_map = chia_fold.chia(anh)
     chia_fold.ghi_csv(cauhinh.FOLDS_CSV, anh, f_map)
-    print(f"Đã ghi {cauhinh.FOLDS_CSV.relative_to(ROOT)}")
-
     nhan = np.array([x.ma_loai for x in anh])
     fold = np.array([f_map[x.image_id] for x in anh])
     ids = [x.image_id for x in anh]
-    tong = [int((fold == k).sum()) for k in range(cauhinh.SO_FOLD)]
-    print(f"Kích thước 5 fold: {tong}")
+    print(f"{len(anh)} ảnh / {len(set(nhan))} loài / 5 fold "
+          f"{[int((fold == k).sum()) for k in range(cauhinh.SO_FOLD)]}")
 
-    # --- T3: trích đặc trưng ---
-    X = trich_tat_ca(anh, a.trich_lai)
-    print(f"Ma trận đặc trưng {X.shape}")
+    nn = danhgia.muc_ngau_nhien(nhan, fold)
+    kq: dict[str, dict] = {}
+    for ten in a.bo:
+        nhan_in, _, do_do, zs = KHOI[ten]
+        print(f"\n[{ten}] {nhan_in}")
+        X = trich_tat_ca(ten, anh, a.trich_lai)
+        kq[ten] = danhgia.danh_gia_5fold(X, nhan, fold, ids, do_do=do_do, z_score=zs)
+        kq[ten]["nhan_in"] = nhan_in
+        kq[ten]["so_chieu"] = X.shape[1]
 
-    # --- T4: tìm kiếm + đo ---
-    KS = (1, 5, 10)
-    gom: dict[str, list[float]] = {f"P@{k}": [] for k in KS}
-    gom["R@10"] = []
-    gom["mAP"] = []
-    p5_moi_anh = np.zeros(len(anh))
+    # --- bảng so sánh ---
+    print("\n" + "=" * 78)
+    print("SO SANH CAC KHOI DAC TRUNG — 5-fold, 1.085 truy van, trung binh macro")
+    print("=" * 78)
+    cot = list(a.bo)
+    print(f"{'chi so':<12}" + "".join(f"{c:>20}" for c in cot) + f"{'ngau nhien':>14}")
+    print(f"{'':12}" + "".join(f"{kq[c]['so_chieu']:>17} chieu" for c in cot))
+    print("-" * 78)
+    for ten_cs in ("P@1", "P@5", "P@10", "R@10", "mAP"):
+        d = f"{ten_cs:<12}"
+        for c in cot:
+            tb, sd = kq[c]["chi_so"][ten_cs]
+            d += f"{tb:>13.1%} ±{sd:>4.1%}"
+        d += f"{nn:>13.1%}" if ten_cs == "P@5" else f"{'':>14}"
+        print(d)
+    print("-" * 78)
+    d = f"{'top-1 acc':<12}"
+    for c in cot:
+        d += f"{kq[c]['do_chinh_xac_top1']:>19.1%}"
+    print(d)
+    print("=" * 78)
 
-    for f in range(cauhinh.SO_FOLD):
-        la_tv = fold == f
-        gal, tv = X[~la_tv], X[la_tv]
-        nhan_gal, nhan_tv = nhan[~la_tv], nhan[la_tv]
+    if len(cot) == 2:
+        a5, b5 = (kq[c]["chi_so"]["P@5"][0] for c in cot)
+        print(f"\nP@5: {cot[1]} / {cot[0]} = {b5 / a5:.2f} lan  "
+              f"(chenh {b5 - a5:+.1%} diem)")
 
-        # Quy tắc trung thực số 1: không ảnh nào vừa ở gallery vừa ở truy vấn.
-        timkiem.kiem_tra_tach_biet(
-            [i for i, t in zip(ids, la_tv) if t],
-            [i for i, t in zip(ids, la_tv) if not t],
-        )
-        # Quy tắc trung thực số 3: mean/std lấy từ gallery của CHÍNH fold này.
-        tb, sd = timkiem.tham_so_chuan_hoa(gal)
-        gal_z, tv_z = timkiem.chuan_hoa(gal, tb, sd), timkiem.chuan_hoa(tv, tb, sd)
-
-        d = timkiem.khoang_cach_l2(tv_z, gal_z)
-        idx_day = timkiem.xep_hang(d, d.shape[1])
-
-        for k in KS:
-            p = timkiem.precision_at_k(nhan_tv, nhan_gal, idx_day, k)
-            gom[f"P@{k}"].append(timkiem.macro_theo_loai(p, nhan_tv))
-            if k == 5:
-                p5_moi_anh[la_tv] = p
-        gom["R@10"].append(timkiem.macro_theo_loai(
-            timkiem.recall_at_k(nhan_tv, nhan_gal, idx_day, 10), nhan_tv))
-        gom["mAP"].append(timkiem.macro_theo_loai(
-            timkiem.average_precision(nhan_tv, nhan_gal, idx_day), nhan_tv))
-
-    nn5 = muc_ngau_nhien(nhan, fold, 5)
-
-    print("\n" + "=" * 62)
-    print("CHI SO 5-FOLD — Bo A dac trung (1) color moments Lab, 9 chieu")
-    print("Trung binh macro theo loai, +- do lech chuan giua 5 fold")
-    print("=" * 62)
-    print(f"{'chi so':<10}{'trung binh':>14}{'do lech':>12}{'ngau nhien':>14}{'gap':>10}")
-    print("-" * 62)
-    for ten, gt in gom.items():
-        v = np.array(gt)
-        if ten == "P@5":
-            print(f"{ten:<10}{v.mean():>13.1%}{v.std():>12.1%}{nn5:>13.1%}{v.mean() / nn5:>9.1f}x")
-        else:
-            print(f"{ten:<10}{v.mean():>13.1%}{v.std():>12.1%}{'':>14}{'':>10}")
-    print("-" * 62)
-    print(f"Tong truy van: {len(anh)} (moi anh lam truy van dung mot lan)")
-
-    # P@5 theo loài, xếp từ thấp lên — loài nào đang khó nhất.
-    pl = timkiem.theo_loai(p5_moi_anh, nhan)
+    # --- P@5 theo loài, đặt cạnh nhau ---
     ten_viet = danhmuc.ten_hien_thi()
     dem = danhmuc.dem_theo_loai(anh)
-    print(f"\n{'ma loai':<10}{'ten':<22}{'so anh':>8}{'P@5':>9}")
-    print("-" * 49)
-    for m, v in sorted(pl.items(), key=lambda kv: kv[1]):
-        print(f"{m:<10}{ten_viet.get(m, ''):<22}{dem[m]:>8}{v:>8.0%}")
-    print("-" * 49)
+    from fishcbir.timkiem import theo_loai
+    bang = {c: theo_loai(kq[c]["p5_moi_anh"], nhan) for c in cot}
+    sap = sorted(dem, key=lambda m: bang[cot[-1]][m])
+    print(f"\n{'ma loai':<10}{'ten':<22}{'anh':>5}" +
+          "".join(f"{c:>10}" for c in cot) + (f"{'chenh':>9}" if len(cot) == 2 else ""))
+    print("-" * (37 + 10 * len(cot) + (9 if len(cot) == 2 else 0)))
+    for m in sap:
+        d = f"{m:<10}{ten_viet.get(m, ''):<22}{dem[m]:>5}"
+        d += "".join(f"{bang[c][m]:>10.0%}" for c in cot)
+        if len(cot) == 2:
+            d += f"{bang[cot[1]][m] - bang[cot[0]][m]:>+9.0%}"
+        print(d)
+    print("-" * (37 + 10 * len(cot) + (9 if len(cot) == 2 else 0)))
 
+    # --- ghi file ---
     cauhinh.KET_QUA.mkdir(parents=True, exist_ok=True)
-    with (cauhinh.KET_QUA / "chi_so_mau.csv").open("w", encoding="utf-8", newline="") as fh:
+    with (cauhinh.KET_QUA / "chi_so.csv").open("w", encoding="utf-8", newline="") as fh:
         w = csv.writer(fh)
-        w.writerow(["chi_so", "trung_binh", "do_lech_chuan"] +
+        w.writerow(["khoi", "so_chieu", "chi_so", "trung_binh", "do_lech_chuan"] +
                    [f"fold{i}" for i in range(cauhinh.SO_FOLD)])
-        for ten, gt in gom.items():
-            w.writerow([ten, f"{np.mean(gt):.6f}", f"{np.std(gt):.6f}"] +
-                       [f"{x:.6f}" for x in gt])
-        w.writerow(["P@5_ngau_nhien", f"{nn5:.6f}", "0"] + [""] * cauhinh.SO_FOLD)
+        for c in cot:
+            for ten_cs, v in kq[c]["theo_fold"].items():
+                w.writerow([c, kq[c]["so_chieu"], ten_cs, f"{np.mean(v):.6f}",
+                            f"{np.std(v):.6f}"] + [f"{x:.6f}" for x in v])
+            w.writerow([c, kq[c]["so_chieu"], "top1_acc",
+                        f"{kq[c]['do_chinh_xac_top1']:.6f}", "", *[""] * cauhinh.SO_FOLD])
+        w.writerow(["-", "-", "P@5_ngau_nhien", f"{nn:.6f}", "", *[""] * cauhinh.SO_FOLD])
     with (cauhinh.KET_QUA / "p5_theo_loai.csv").open("w", encoding="utf-8", newline="") as fh:
         w = csv.writer(fh)
-        w.writerow(["ma_loai", "ten_viet", "so_anh", "p_at_5"])
-        for m, v in sorted(pl.items(), key=lambda kv: kv[1]):
-            w.writerow([m, ten_viet.get(m, ""), dem[m], f"{v:.6f}"])
-    print(f"\nDa ghi ket qua vao {cauhinh.KET_QUA.relative_to(ROOT)}/")
+        w.writerow(["ma_loai", "ten_viet", "so_anh"] + [f"p5_{c}" for c in cot])
+        for m in sap:
+            w.writerow([m, ten_viet.get(m, ""), dem[m]] + [f"{bang[c][m]:.6f}" for c in cot])
+    print(f"\nDa ghi {cauhinh.KET_QUA.relative_to(ROOT)}/chi_so.csv va p5_theo_loai.csv")
     return 0
 
 

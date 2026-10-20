@@ -36,7 +36,8 @@
 - [ ] **T5** Màu: ② histogram HSV 4 dải + ③ màu trội k-means (276 chiều) · M · TV-A
 - [ ] **T6** Kết cấu: ④ LBP 3 bán kính + ⑤ GLCM 4 hướng + ⑥ Gabor (118 chiều) · M · TV-A
 - [ ] **T7** Hình dáng: ⑦ tỉ số + ⑧ Hu + ⑨ Fourier + ⑩ contour (98 chiều) · M · TV-B
-- [ ] **T8** Bộ B ResNet18 512 chiều + PCA · S · TV-B
+- [x] **T8** Bộ B ResNet18 512 chiều, cosine → **P@5 72,2%**, top-1 80,8% (gấp 2,24 lần Bộ A①)
+  - [ ] PCA 128-256 chiều — chưa làm, để đo đánh đổi kích thước chỉ mục ở T13
 - [x] **T9** Bộ C: 20 loài × 10 thuộc tính ngữ nghĩa → `data_meta/thuoc_tinh_ngu_nghia.csv`,
       `scripts/bo_c.py`, `docs/bo-c-ngu-nghia.md` · đo xong giá trị thông tin
   - [ ] cả nhóm duyệt chéo lại 200 ô giá trị (NT đã soạn bản đầu từ FishBase)
@@ -44,6 +45,7 @@
 - [ ] **T10** Chuẩn hóa khối + độ đo theo loại + hợp nhất có trọng số · M · NT
 
 ### ✅ Chốt chặn 2 — ablation chạy được
+> Khung ablation đã dựng xong ở `fishcbir/danhgia.py`; chạy 2/6 cấu hình (mau, sau).
 - [ ] 6 cấu hình ra số: màu / kết cấu / hình dáng / ghép cổ điển / deep / hợp nhất
 - [ ] Hợp nhất tốt hơn từng khối riêng
 - [ ] Không khối nào sinh NaN hay vector toàn 0
