@@ -97,7 +97,9 @@
 
 ## Giai đoạn 6 — Báo cáo
 
-- [ ] **T19** Báo cáo tiến độ 1 — **hạn 22/10, còn 9 ngày** · M
+- [x] **T19** Báo cáo tiến độ 1 → `docs/bao-cao/tien-do-1.md` (viết 20/10, hạn 22/10)
+  - [ ] nhóm đọc rà lại trước khi nộp
+  - [ ] xuất bản nộp (.docx hoặc PDF) nếu thầy yêu cầu định dạng file
 - [ ] **T20** Báo cáo tiến độ 2 — hạn 26/11 · M
 - [ ] **T21** Báo cáo tổng + demo — hạn 15/12 · L
   - đưa mục kiến trúc & mô hình dữ liệu vào báo cáo, nguồn: `docs/kien-truc-va-mo-hinh-du-lieu.md`
@@ -111,7 +113,7 @@
 
 - [x] **T9** Bộ C — xong 20/10, có bảng entropy + 12 cặp cùng họ
 - [x] T1 → T4 — xong 20/10, P@5 = 32,2%
-- [ ] T19 — viết báo cáo
+- [x] T19 — viết báo cáo
 
 T5–T8 chưa cần xong trước 22/10, chỉ cần **trình bày thiết kế** của chúng.
 
