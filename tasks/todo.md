@@ -17,16 +17,16 @@
 
 ## Giai đoạn 1 — Nền móng và lát cắt dọc đầu tiên
 
-- [ ] **T1** Khung package `fishcbir` (nạp danh mục, nạp ảnh, cấu hình `.env`) · S · NT
-- [ ] **T2** Chia 5-fold **phân tầng theo loài**, seed cố định → `data_meta/splits/folds.csv` · S · NT
-- [ ] **T3** Đặc trưng ① color moments Lab 9 chiều, chỉ trên mask · S · TV-A
-- [ ] **T4** Tìm kiếm top-5 NumPy + Precision@5 macro, **loại self-match** · M · NT
+- [x] **T1** Khung package `fishcbir` — `cauhinh`, `danhmuc`, `chia_fold`, `dactrung/`, `timkiem`
+- [x] **T2** Chia 5-fold phân tầng, seed 20261020 → `data_meta/splits/folds.csv` (217 ảnh/fold)
+- [x] **T3** Color moments Lab 9 chiều, chỉ trên mask — 29,4 ms/ảnh
+- [x] **T4** Tìm kiếm top-5 NumPy + P@5 macro → **32,2%** (ngẫu nhiên 5,0%, gấp 6,4 lần)
 
 ### ✅ Chốt chặn 1 — toàn tuyến thông
-- [ ] Có con số Precision@5 đầu tiên
-- [ ] Không ảnh nào tự khớp chính nó
-- [ ] Mọi loài có mặt ở cả 5 fold
-- [ ] P@5 cao hơn mức ngẫu nhiên 5% rõ rệt
+- [x] Có con số Precision@5 đầu tiên: **32,2% ± 1,2%**
+- [x] Không ảnh nào tự khớp chính nó (`kiem_tra_tach_biet` chạy mỗi fold)
+- [x] Mọi loài có mặt ở cả 5 fold
+- [x] P@5 cao hơn mức ngẫu nhiên rõ rệt — 6,4 lần
 - [ ] **Báo nhóm trước khi làm tiếp**
 
 ---
@@ -108,7 +108,7 @@
 Đây là đường găng gần nhất. Mốc 1 chỉ cần phần 1 và 2 của đề:
 
 - [x] **T9** Bộ C — xong 20/10, có bảng entropy + 12 cặp cùng họ
-- [ ] T1 → T4 — để báo cáo có con số đầu tiên, không chỉ là thiết kế trên giấy
+- [x] T1 → T4 — xong 20/10, P@5 = 32,2%
 - [ ] T19 — viết báo cáo
 
 T5–T8 chưa cần xong trước 22/10, chỉ cần **trình bày thiết kế** của chúng.

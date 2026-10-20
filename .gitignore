@@ -15,3 +15,6 @@ venv/
 
 # Office tạm
 ~$*
+
+# Cache dac trung — sinh lai duoc bang scripts/danh_gia.py --trich-lai
+ket_qua/*.npz
