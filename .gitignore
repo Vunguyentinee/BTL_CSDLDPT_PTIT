@@ -1,0 +1,17 @@
+# Ảnh và dữ liệu — KHÔNG commit, dung lượng lớn
+work/
+data/
+dataset_ca/
+*.zip
+
+# Cấu hình riêng từng máy (đường dẫn Drive khác nhau)
+.env
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+
+# Office tạm
+~$*

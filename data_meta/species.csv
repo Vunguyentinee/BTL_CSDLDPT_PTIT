@@ -1,0 +1,32 @@
+﻿ma_loai,ten_khoa_hoc,chi,ma_ho,ten_ho,ten_viet,ten_tieng_anh,ten_dong_nghia,fishbase_id,inat_taxon_id,so_anh_inat,so_anh_inat_license_ok,vai_tro,loai_cap_voi,nguoi_phu_trach,trang_thai,ly_do_loai,ghi_chu
+CYP_CAR,Cyprinus carpio,Cyprinus,CYPR,Cyprinidae,Cá chép,Common carp,,1450,53911,29596,22304,cap_de_nham,CAR_AUR,NT,da_chot,,Dễ nhầm với cá diếc
+CAR_AUR,Carassius auratus,Carassius,CYPR,Cyprinidae,Cá vàng,Goldfish,,271,58612,7388,5445,cap_de_nham,CYP_CAR,NT,da_chot,,Cá vàng và cá diếc cùng loài Carassius auratus; nhóm chọn dạng CÁ VÀNG. Người duyệt loại ảnh dạng hoang dã màu bạc.
+ORE_NIL,Oreochromis niloticus,Oreochromis,CICH,Cichlidae,Cá rô phi vằn,Nile tilapia,,2,121324,4230,3055,cap_de_nham,ORE_MOS,TV-A,da_chot,,
+ORE_MOS,Oreochromis mossambicus,Oreochromis,CICH,Cichlidae,Cá rô phi đen,Mozambique tilapia,,3,107889,3738,2883,cap_de_nham,ORE_NIL,TV-A,da_chot,,Cùng chi với rô phi vằn nên là cặp khó nhất nhóm nước ngọt
+AMP_OCE,Amphiprion ocellaris,Amphiprion,POMA,Pomacentridae,Cá hề,Ocellaris clownfish,,6509,132688,3271,2492,cap_de_nham,AMP_FRE,TV-A,da_chot,,Không chọn A. percula vì gần như y hệt loài này
+AMP_FRE,Amphiprion frenatus,Amphiprion,POMA,Pomacentridae,Cá hề cà chua,Tomato clownfish,,6522,57740,1334,986,cap_de_nham,AMP_OCE,TV-A,da_chot,,Khác cá hề ở số khoang trắng
+SAL_SAL,Salmo salar,Salmo,SALM,Salmonidae,Cá hồi Đại Tây Dương,Atlantic salmon,,236,48648,1170,918,cap_de_nham,ONC_MYK,TV-B,da_chot,,
+ONC_MYK,Oncorhynchus mykiss,Oncorhynchus,SALM,Salmonidae,Cá hồi vân,Rainbow trout,,239,47516,23933,17361,cap_de_nham,SAL_SAL,TV-B,da_chot,,Khác cá hồi Đại Tây Dương ở dải màu dọc thân
+SCO_COM,Scomberomorus commerson,Scomberomorus,SCOM,Scombridae,Cá thu,Narrow-barred Spanish mackerel,,121,132369,484,366,cap_de_nham,KAT_PEL,NT,da_chot,,
+KAT_PEL,Katsuwonus pelamis,Katsuwonus,SCOM,Scombridae,Cá ngừ vằn,Skipjack tuna,,107,56943,344,257,cap_de_nham,SCO_COM,NT,da_chot,,Cùng dáng thoi với cá thu nhưng khác hoa văn
+PAN_HYP,Pangasianodon hypophthalmus,Pangasianodon,PANG,Pangasiidae,Cá tra,Striped catfish,,14154,108332,227,184,doi_chung,,NT,da_chot,,Thành loài đơn sau khi loại cá basa
+PAN_BOC,Pangasius bocourti,Pangasius,PANG,Pangasiidae,Cá basa,Basa,,14112,187971,6,4,cap_de_nham,,NT,da_loai,chi_6_anh_tu_inat_va_fishbase,Cặp rất khó với cá tra
+TRI_PEC,Trichopodus pectoralis,Trichopodus,OSPH,Osphronemidae,Cá sặc rằn,Snakeskin gourami,,499,188582,108,68,cap_de_nham,,TV-B,da_loai,chi_4_anh_tu_fishbase,
+OSP_GOR,Osphronemus goramy,Osphronemus,OSPH,Osphronemidae,Cá tai tượng,Giant gourami,,498,187941,203,133,cap_de_nham,TRI_PEC,TV-B,da_chot,,Cùng họ với cá sặc rằn nhưng khác cỡ và hoa văn
+ZEB_FLA,Zebrasoma flavescens,Zebrasoma,ACAN,Acanthuridae,Cá đuôi gai vàng,Yellow tang,,6018,52459,2618,2099,cap_khac_xa,PAR_HEP,TV-B,da_chot,,Cùng họ nhưng khác xa cá đuôi gai xanh — dùng để minh họa vì sao không lấy họ làm nhãn
+PAR_HEP,Paracanthurus hepatus,Paracanthurus,ACAN,Acanthuridae,Cá đuôi gai xanh,Blue tang,,6017,130879,634,487,cap_khac_xa,ZEB_FLA,TV-B,da_chot,,
+PAM_ARG,Pampus argenteus,Pampus,STRO,Stromateidae,Cá chim trắng,Silver pomfret,,491,52731,29,20,doi_chung,,NT,da_loai,iNaturalist_can_nguon_chi_con_18_anh,Đối chứng: thân dẹt tròn màu bạc không hoa văn
+CHA_STR,Channa striata,Channa,CHAN,Channidae,Cá lóc,Striped snakehead,,343,97280,3214,2209,doi_chung,,TV-A,da_chot,,Đối chứng: thân hình trụ dài
+ANA_TES,Anabas testudineus,Anabas,ANAB,Anabantidae,Cá rô đồng,Climbing perch,,495,93987,730,478,doi_chung,,TV-B,da_chot,,
+CLA_BAT,Clarias batrachus,Clarias,CLAR,Clariidae,Cá trê,Walking catfish,,3054,97926,856,611,doi_chung,,TV-B,da_loai,ty_le_nhan_4pct_duyet_187_chi_duoc_9_nguon_con_lai_khong_du,Đối chứng: có râu và không vảy nên đặc trưng kết cấu khác hẳn
+ONC_KIS,Oncorhynchus kisutch,Oncorhynchus,SALM,Salmonidae,Cá hồi bạc,Coho salmon,,,53692,5581,4471,,,,ung_vien,,Dự phòng cho họ Salmonidae
+SCO_JAP,Scomber japonicus,Scomber,SCOM,Scombridae,Cá thu Nhật,Chub mackerel,,,69840,622,460,,,,ung_vien,,Dự phòng cho họ Scombridae
+LAT_CAL,Lates calcarifer,Lates,LATI,Latidae,Cá chẽm,Barramundi,,,47353,587,437,,,,ung_vien,,Dự phòng — mở thêm một họ mới nếu phải loại họ khác
+CHA_MIC,Channa micropeltes,Channa,CHAN,Channidae,Cá lóc bông,Giant snakehead,,,97274,431,288,,,,ung_vien,,Dự phòng — ghép cặp được với cá lóc để thành cặp dễ nhầm
+AMP_CLA,Amphiprion clarkii,Amphiprion,POMA,Pomacentridae,Cá hề Clark,Clark's anemonefish,,,136345,5128,3846,,,,ung_vien,,Dự phòng cho họ Pomacentridae
+TRI_TRI,Trichopodus trichopterus,Trichopodus,OSPH,Osphronemidae,Cá sặc bướm,Three spot gourami,,,188583,764,521,,,,ung_vien,,Dự phòng cho họ Osphronemidae
+BAR_GON,Barbonymus gonionotus,Barbonymus,CYPR,Cyprinidae,Cá mè vinh,Silver barb,,,187125,407,260,,,,ung_vien,,Dự phòng cho họ Cyprinidae
+BET_SPL,Betta splendens,Betta,OSPH,Osphronemidae,Cá xiêm,Siamese fighting fish,,,,,,cap_de_nham,OSP_GOR,TV-B,da_chot,,"Nguồn: Archive. Vây xòe rất dài, biến dị màu lớn."
+SYM_SPP,Symphysodon spp,Symphysodon,CICH,Cichlidae,Cá dĩa,Discus,,,,,,cap_de_nham,AST_OCE,TV-A,da_chot,,Nguồn: Archive. NHÃN CẤP CHI chứ không phải cấp loài — ghi rõ trong phần hạn chế.
+AST_OCE,Astronotus ocellatus,Astronotus,CICH,Cichlidae,Cá hồng két,Oscar,,,,,,cap_de_nham,SYM_SPP,TV-A,da_chot,,Nguồn: Archive. Cùng họ và cùng dáng dẹt cao với cá dĩa.
+POE_RET,Poecilia reticulata,Poecilia,POEC,Poeciliidae,Cá bảy màu,Guppy,,,,,,doi_chung,,NT,da_chot,,"Nguồn: Archive. Cá rất nhỏ, biến dị màu và dáng đuôi cực lớn."

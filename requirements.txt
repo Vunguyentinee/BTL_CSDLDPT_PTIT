@@ -1,0 +1,18 @@
+# Cài: python -m pip install -r requirements.txt
+#
+# Dùng ĐÚNG Python đã cài những gói này. Lỗi hay gặp nhất là VS Code tự chọn
+# .venv của một dự án khác rồi báo "No module named 'PIL'".
+# Kiểm bằng:  python -c "import sys; print(sys.executable)"
+
+# --- Bắt buộc cho mọi script ---
+requests>=2.31          # tai_anh.py, build_species.py — gọi API và tải ảnh
+Pillow>=10.0            # mọi script — đọc/ghi/biến đổi ảnh; kèm ImageTk cho review_tool
+numpy>=1.26             # chuan_hoa.py — tính mô men, mask, độ nét
+
+# --- Chỉ cần cho chuan_hoa.py (tách nền) ---
+# Lần chạy đầu tự tải model u2net ~170MB về C:\Users\<ten>\.rembg\
+rembg>=2.0.85
+onnxruntime>=1.17
+
+# tkinter (review_tool.py) đi kèm sẵn bản cài Python chính thức trên Windows,
+# không cài qua pip được.
