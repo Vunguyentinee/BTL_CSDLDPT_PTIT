@@ -37,7 +37,10 @@
 - [ ] **T6** Kết cấu: ④ LBP 3 bán kính + ⑤ GLCM 4 hướng + ⑥ Gabor (118 chiều) · M · TV-A
 - [ ] **T7** Hình dáng: ⑦ tỉ số + ⑧ Hu + ⑨ Fourier + ⑩ contour (98 chiều) · M · TV-B
 - [ ] **T8** Bộ B ResNet18 512 chiều + PCA · S · TV-B
-- [ ] **T9** Bộ C: 20 loài × 10 thuộc tính ngữ nghĩa, duyệt chéo · M · cả nhóm
+- [x] **T9** Bộ C: 20 loài × 10 thuộc tính ngữ nghĩa → `data_meta/thuoc_tinh_ngu_nghia.csv`,
+      `scripts/bo_c.py`, `docs/bo-c-ngu-nghia.md` · đo xong giá trị thông tin
+  - [ ] cả nhóm duyệt chéo lại 200 ô giá trị (NT đã soạn bản đầu từ FishBase)
+  - [ ] **xác nhận AST_OCE**: ảnh Archive là *Astronotus ocellatus* hay cá lai *Amphilophus*?
 - [ ] **T10** Chuẩn hóa khối + độ đo theo loại + hợp nhất có trọng số · M · NT
 
 ### ✅ Chốt chặn 2 — ablation chạy được
@@ -104,7 +107,7 @@
 
 Đây là đường găng gần nhất. Mốc 1 chỉ cần phần 1 và 2 của đề:
 
-- [ ] **T9** Bộ C — nguyên liệu cho phần "mô tả giống/khác nhau" ← **bắt đầu ngay**
+- [x] **T9** Bộ C — xong 20/10, có bảng entropy + 12 cặp cùng họ
 - [ ] T1 → T4 — để báo cáo có con số đầu tiên, không chỉ là thiết kế trên giấy
 - [ ] T19 — viết báo cáo
 

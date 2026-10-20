@@ -1,0 +1,21 @@
+ma_loai,dang_than,ti_le_dai_cao,mau_nen,soc,cham,tuong_phan_lung_bung,dang_duoi,vay_lung,kich_thuoc,moi_truong,ghi_chu
+CYP_CAR,det_dai,trung_binh,nau,khong,khong,vua,chia_nhe,dai_lien,lon,nuoc_ngot,"Vây lưng dài 17-22 tia là dấu hiệu họ Cyprinidae. Có 2 đôi râu ngắn — thuộc tính này KHÔNG có trong 10 cột, ghi vào phần hạn chế."
+CAR_AUR,det_cao,cao,cam,khong,khong,yeu,xoe_dai,ngan,nho,nuoc_ngot,"Nhóm chọn dạng cá vàng thuần hóa, không phải dạng hoang dã màu bạc. Biến dị dáng đuôi rất lớn giữa các dòng."
+ORE_NIL,det_cao,cao,bac,vach_dung,khong,vua,cat_bang,gai_cung,trung_binh,nuoc_ngot,"Vạch đứng rõ cả trên thân và trên vây đuôi — đây là dấu hiệu tách khỏi O. mossambicus."
+ORE_MOS,det_cao,cao,den,khong,khong,yeu,cat_bang,gai_cung,trung_binh,nuoc_lo,"Không hoa văn vạch đứng rõ như O. niloticus. Chịu nước lợ tốt nên moi_truong=nuoc_lo — đây là thuộc tính duy nhất tách cặp này ngoài mau_nen và soc."
+AMP_OCE,det_cao,cao,cam,vach_dung,khong,yeu,tron,dai_lien,nho,nuoc_man,"3 khoang trắng. Số khoang KHÔNG mã hóa được bằng từ vựng hiện tại — xem phần hạn chế."
+AMP_FRE,det_cao,cao,do,vach_dung,khong,yeu,tron,dai_lien,nho,nuoc_man,"1 khoang trắng. Khác A. ocellaris duy nhất ở mau_nen trong 10 thuộc tính này."
+SAL_SAL,thoi,dai,bac,khong,thua,manh,chia_nhe,co_vay_mo,lon,nuoc_lo,"Chấm đen hình chữ X, thưa, chủ yếu phía trên đường bên. Cá di cư nên môi trường ghi nuoc_lo."
+ONC_MYK,thoi,dai,bac,dai_ngang,day,manh,cat_bang,co_vay_mo,trung_binh,nuoc_ngot,"Dải hồng dọc thân + chấm dày lan cả xuống vây đuôi. Ghi dạng sống nước ngọt (không phải dạng steelhead di cư)."
+SCO_COM,thoi,rat_dai,bac,vach_dung,khong,manh,chia_sau,gai_cung,rat_lon,nuoc_man,"Tên tiếng Anh narrow-barred chỉ đúng các vạch ĐỨNG — khác hẳn dải ngang của cá ngừ vằn."
+KAT_PEL,thoi,dai,bac,dai_ngang,khong,manh,chia_sau,gai_cung,lon,nuoc_man,"4-6 dải sẫm chạy dọc phần bụng. Cùng dáng thoi với cá thu nhưng hoa văn khác phương."
+PAN_HYP,det_dai,dai,bac,dai_ngang,khong,manh,chia_sau,co_vay_mo,lon,nuoc_ngot,"Có vây mỡ giống họ cá hồi — trùng giá trị vay_lung với SAL_SAL và ONC_MYK dù khác họ. Cố ý giữ để thấy giới hạn của thuộc tính này."
+OSP_GOR,det_cao,cao,nau,khong,khong,yeu,tron,dai_lien,lon,nuoc_ngot,
+ZEB_FLA,det_tron,rat_cao,vang,khong,khong,yeu,cat_bang,dai_lien,nho,nuoc_man,"Màu vàng thuần, không hoa văn — cặp khác xa với PAR_HEP dù cùng họ."
+PAR_HEP,det_cao,cao,xanh_lam,dai_ngang,khong,yeu,cat_bang,dai_lien,nho,nuoc_man,"Dải đen hình bảng màu chạy dọc thân, đuôi vàng."
+CHA_STR,tru_dai,rat_dai,nau,dai_ngang,khong,vua,tron,dai_lien,lon,nuoc_ngot,"Thân hình trụ dài — đối chứng cho nhóm cá dẹt."
+ANA_TES,det_dai,trung_binh,nau,khong,khong,yeu,tron,gai_cung,nho,nuoc_ngot,
+BET_SPL,det_dai,cao,da_mau,khong,khong,yeu,xoe_dai,dai_lien,rat_nho,nuoc_ngot,"Vây xòe rất dài nên mask gộp cả vây, ti_le_dai_cao tính theo mask chứ không theo thân. Biến dị màu cực lớn nên mau_nen=da_mau."
+SYM_SPP,det_tron,rat_cao,da_mau,vach_dung,khong,yeu,tron,dai_lien,nho,nuoc_ngot,"NHÃN CẤP CHI. 9 vạch đứng ở dạng hoang dã nhưng các dòng lai mất gần hết hoa văn."
+AST_OCE,det_cao,cao,nau,khong,dom_mat,yeu,tron,dai_lien,trung_binh,nuoc_ngot,"Đốm mắt ở gốc vây đuôi là nguồn gốc tên loài ocellatus. CẦN DUYỆT ẢNH: tên Việt ""cá hồng két"" thường chỉ cá lai Amphilophus màu cam, không phải Astronotus ocellatus — phải xác nhận ảnh Archive đúng loài nào."
+POE_RET,det_dai,trung_binh,da_mau,van_luoi,day,yeu,xoe_dai,ngan,rat_nho,nuoc_ngot,"Vân mắt lưới là nguồn gốc tên loài reticulata. Biến dị màu và dáng đuôi cực lớn."
