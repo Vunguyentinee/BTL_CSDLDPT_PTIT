@@ -18,3 +18,13 @@ venv/
 
 # Cache dac trung — sinh lai duoc bang scripts/danh_gia.py --trich-lai
 ket_qua/*.npz
+
+# Tài liệu của giảng viên — không phát hành lại lên repo công khai
+Bài giảng/
+Documents/Requirement.docx
+
+# Cấu hình editor riêng từng máy (chứa đường dẫn Python tuyệt đối)
+.vscode/
+
+# File nháp cũ, nội dung đã chuyển vào docs/bon-bo-dac-trung.md
+New Microsoft Word Document.docx
